@@ -1,0 +1,26 @@
+.header {
+  background-color: #e2d8aa;
+  padding: 15px 35px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.header h2 {
+  margin: 0;
+  color: #55442e;
+}
+
+.header nav {
+  display: flex;
+  gap: 25px;
+}
+
+.header nav a {
+  color: #222;
+  text-decoration: none;
+}
+
+.header nav a:hover {
+  color: rgb(116, 104, 37);
+}
