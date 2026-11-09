@@ -49,12 +49,6 @@ function App() {
     sortedProducts.sort((a, b) => b.price - a.price);
   }
 
-  if (sort === "az") {
-    sortedProducts.sort((a, b) =>
-      a.title.localeCompare(b.title)
-    );
-  }
-
   function resetFilters() {
     setSearch("");
     setCategory("All");
@@ -123,7 +117,6 @@ function App() {
               <option value="default">Default</option>
               <option value="low">Price: Low to High</option>
               <option value="high">Price: High to Low</option>
-              <option value="az">Name: A to Z</option>
             </select>
 
             <button onClick={resetFilters}>
