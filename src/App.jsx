@@ -142,6 +142,7 @@ function App() {
                 <Product
                   key={item.id}
                   name={item.title}
+                  id={item.id}
                   price={item.price}
                   image={item.thumbnail}
                   category={item.category}
