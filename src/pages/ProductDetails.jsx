@@ -1,10 +1,11 @@
-import { useParams, Link } from "react-router";
-import {useState, useEffect} from "react";
+import { useParams, Link, useNavigate } from "react-router";
+import { useState, useEffect } from "react";
 
-function ProductDetails() {
+function ProductDetails({addToCart}) {
     const { id } = useParams();
     const [product,setProduct]=useState(null);
     const [quantity,setQuantity]=useState(1);
+    const navigate = useNavigate();
 
     useEffect(()=>{
         setProduct(null);
@@ -43,7 +44,8 @@ function ProductDetails() {
 
         <h2 className="text-xl font-bold mt-4">Total:${totalPrice.toFixed(2)}</h2>
 
-        <button className="bg-orange-600 text-white px-6 py-3 mt-4 rounded">Add to Cart</button>
+        <button onClick={() =>{addToCart(product, quantity); navigate("/cart")}}
+        className="bg-orange-600 text-white px-6 py-3 mt-4 rounded">Add to Cart</button>
     </div>
     );
 }
