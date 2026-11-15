@@ -21,7 +21,7 @@ function Checkout({cart,setCart}){
         setCart([]);
     }
 
-    if (cart,length === 0){
+    if (cart.length === 0){
         return(
             <div className = "p-8">
                 <h1>yor cart is empty!</h1>
@@ -63,7 +63,7 @@ function Checkout({cart,setCart}){
                         required
                         className="border p-3 rounded"/>
                 
-                <h2 className="text-xl font-bold mt-4">Total: ${total.toFixed(2)}</h2>
+                <h2 className="text-xl font-bold mt-4">Total: ${total}</h2>
 
                 <button
                     type="submit"
