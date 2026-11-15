@@ -30,10 +30,6 @@ function OrderSuccess() {
         Order Total: ${order.total.toFixed(2)}
         </p>
 
-        <p className="text-gray-500 mt-4">
-        This was a demo order. No real payment was made.
-        </p>
-
         <Link
         to="/"
         className="inline-block bg-blue-600 text-white px-6 py-3 rounded mt-6"
