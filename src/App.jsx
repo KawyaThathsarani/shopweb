@@ -18,9 +18,10 @@ function App() {
   const [minPrice, setMinPrice] = useState("");
   const [maxPrice, setMaxPrice] = useState(50000);
   const [sort, setSort] = useState("default");
+  const [currentPage,setCurrentPage] = useState(1);
 
   useEffect(() => {
-    fetch("https://dummyjson.com/products?limit=20")
+    fetch("https://dummyjson.com/products")
       .then(response => response.json())
       .then(data => setProducts(data.products));
   }, []);
@@ -48,6 +49,18 @@ function App() {
   if (sort === "high") {
     sortedProducts.sort((a, b) => b.price - a.price);
   }
+
+  const productsPerPage = 12;
+  const totalPages = Math.ceil(           //Math.ceil -> use to roundup the number after deviding it  
+    sortedProducts.length/productsPerPage
+  );
+
+  const startIndex = (currentPage -1) * productsPerPage;
+
+  const currentProducts = sortedProducts.slice(   //retrieve a selected portion from an array
+    startIndex,
+    startIndex + productsPerPage
+  );
 
   function resetFilters() {
     setSearch("");
@@ -125,13 +138,14 @@ function App() {
 
           </aside>
 
+
           <section className="products-area">
 
             <p>{sortedProducts.length} products found</p>
 
             <div className="product-list">
 
-              {sortedProducts.map(item => (
+              {currentProducts.map(item => (
                 <Product
                   key={item.id}
                   name={item.title}
@@ -146,6 +160,43 @@ function App() {
 
             {sortedProducts.length === 0 && (
               <p>No matching products found.</p>
+            )}
+
+
+            {totalPages > 1 && (          //pagination
+              <div className="mt-10 flex flex-wrap items-center justify-center gap-2">            
+
+                <button
+                  onClick={() => setCurrentPage(currentPage - 1)}
+                  disabled={currentPage === 1}
+                  className="rounded-lg border border-gray-300 bg-white px-4 py-2 hover:bg-gray-100 disabled:opacity-40"
+                >
+                  Previous
+                </button>           
+
+                {Array.from({ length: totalPages }, (_, index) => (
+                  <button
+                    key={index}
+                    onClick={() => setCurrentPage(index + 1)}
+                    className={`rounded-lg px-4 py-2 ${
+                      currentPage === index + 1
+                        ? "bg-brown-600 text-white"
+                        : "border border-gray-300 bg-white hover:bg-gray-100"
+                    }`}
+                  >
+                    {index + 1}
+                  </button>
+                ))}           
+
+                <button
+                  onClick={() => setCurrentPage(currentPage + 1)}
+                  disabled={currentPage === totalPages}
+                  className="rounded-lg border border-gray-300 bg-white px-4 py-2 hover:bg-gray-100 disabled:opacity-40"
+                >
+                  Next
+                </button>           
+
+              </div>
             )}
 
           </section>

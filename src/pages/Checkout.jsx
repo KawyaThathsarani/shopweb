@@ -8,12 +8,12 @@ function Checkout({cart,setCart}){
     const [phone,setPhone] = useState("");
     const [address,setAddress] = useState("");
 
-    const total = cart.reduce(
+    const total = cart.reduce(                      //reduce-> array method  , process products one by one
         (sum,item)=> sum + item.price * item.quantity,0
     );
 
     function handleOrder(e){
-        e.preventDefault();
+        //e.preventDefault();
         navigate("/order-success",{
             state:{name,total}
         });
