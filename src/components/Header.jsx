@@ -3,7 +3,7 @@ import "./Header.css"
 function Header() {
     return (
         <header className="header">
-            <h2>ShopWeb</h2>
+            <h2 className="text-2xl font-bold text-brown-400">ShopWeb</h2>
 
             <nav>
                 <a href="/">Home</a>
