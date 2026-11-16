@@ -67,7 +67,7 @@ function Checkout({cart,setCart}){
 
                 <button
                     type="submit"
-                    className="bg-green-600 text-white p-3 rounded"
+                    className="bg-orange-600 text-white p-3 rounded"
                 >Place Demo Order</button>
 
             </form>
