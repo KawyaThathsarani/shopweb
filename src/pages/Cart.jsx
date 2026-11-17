@@ -96,7 +96,7 @@ function Cart({ cart, setCart }) {
                         disabled={item.quantity <= 1}
                         className="rounded-lg bg-slate-100 px-4 py-2 hover:bg-slate-200 disabled:opacity-40"
                     >
-                        −
+                        -
                     </button>
 
                     <span className="font-semibold">

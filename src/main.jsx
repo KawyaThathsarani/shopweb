@@ -12,13 +12,13 @@ import OrderSuccess from "./pages/OrderSuccess.jsx";
 
 function Main() {
 
-  const [cart, setCart] = useState(() => {
+  const [cart, setCart] = useState(() => {        //get previously saved cart data (make function inside of usestate)
         const savedCart = localStorage.getItem("shopweb-cart");
-        return savedCart ? JSON.parse(savedCart) : [];
+        return savedCart ? JSON.parse(savedCart) : [];    //if cart in saved? then give data else give empty array
   });
 
   useEffect(() => {
-    localStorage.setItem("shopweb-cart", JSON.stringify(cart));
+    localStorage.setItem("shopweb-cart", JSON.stringify(cart));   //save cart whenever it changes
   }, [cart]);
 
   function addToCart(product, quantity) {
