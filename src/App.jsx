@@ -174,13 +174,13 @@ function App() {
                   Previous
                 </button>           
 
-                {Array.from({ length: totalPages }, (_, index) => (
-                  <button
+                {Array.from({ length: totalPages }, (_, index) => (   //array.form is a js method for crete a new array
+                  <button                                             // (_,index) -> _ current item position , index -> current item position
                     key={index}
                     onClick={() => setCurrentPage(index + 1)}
                     className={`rounded-lg px-4 py-2 ${
                       currentPage === index + 1
-                        ? "bg-brown-600 text-white"
+                        ? "bg-brown-600 text-gray"
                         : "border border-gray-300 bg-white hover:bg-gray-100"
                     }`}
                   >
