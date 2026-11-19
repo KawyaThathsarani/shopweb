@@ -6,6 +6,7 @@ import Hero from "./components/Hero"
 import "./App.css";
 import "./index.css";
 import { useState, useEffect } from "react";
+import { Button } from "@/components/ui/button";
 
 function App() {
 
@@ -54,6 +55,11 @@ function App() {
   const totalPages = Math.ceil(           //Math.ceil -> use to roundup the number after deviding it  
     sortedProducts.length/productsPerPage
   );
+  useEffect(() => {
+  if (currentPage > Math.max(1, totalPages)) {
+    setCurrentPage(1);
+  }
+  }, [currentPage, totalPages]);
 
   const startIndex = (currentPage -1) * productsPerPage;
 
@@ -75,7 +81,6 @@ function App() {
 
       <Header />
       <Hero/>
-
       <main id="products" className="container">
 
         <h1>ShopNest Products</h1>
@@ -163,52 +168,42 @@ function App() {
             )}
 
 
-            {totalPages > 1 && (          //pagination
-              <div className="mt-10 flex flex-wrap items-center justify-center gap-2">            
+            {totalPages > 1 && (
+            <div className="flex justify-center gap-3 mt-8">          
 
-                <button
-                  onClick={() => setCurrentPage(currentPage - 1)}
-                  disabled={currentPage === 1}
-                  className="rounded-lg border border-gray-300 bg-white px-4 py-2 hover:bg-gray-100 disabled:opacity-40"
-                >
-                  Previous
-                </button>           
+              <Button
+                variant="outline"
+                disabled={currentPage === 1}
+                onClick={() => setCurrentPage(currentPage - 1)}
+              >
+                Previous
+              </Button>         
 
-                {Array.from({ length: totalPages }, (_, index) => (   //array.form is a js method for crete a new array
-                  <button                                             // (_,index) -> _ current item position , index -> current item position
-                    key={index}
-                    onClick={() => setCurrentPage(index + 1)}
-                    className={`rounded-lg px-4 py-2 ${
-                      currentPage === index + 1
-                        ? "bg-brown-600 text-gray"
-                        : "border border-gray-300 bg-white hover:bg-gray-100"
-                    }`}
-                  >
-                    {index + 1}
-                  </button>
-                ))}           
+              <span className="p-2">
+                Page {currentPage} of {totalPages}
+              </span>         
 
-                <button
-                  onClick={() => setCurrentPage(currentPage + 1)}
-                  disabled={currentPage === totalPages}
-                  className="rounded-lg border border-gray-300 bg-white px-4 py-2 hover:bg-gray-100 disabled:opacity-40"
-                >
-                  Next
-                </button>           
+              <Button
+                variant="outline"
+                disabled={currentPage === totalPages}
+                onClick={() => setCurrentPage(currentPage + 1)}
+              >
+                Next
+              </Button>         
+
+            </div>
+          )}          
+
+                    </section>          
+
+                  </div>
+                </main>         
+
+                <footer id="footer" className="footer">
+                  <Footer />
+                </footer>         
 
               </div>
-            )}
-
-          </section>
-
-        </div>
-      </main>
-
-      <footer id="footer" className="footer">
-        <Footer />
-      </footer>
-
-    </div>
   );
 }
 
