@@ -5,7 +5,7 @@ import { BrowserRouter, Routes, Route } from "react-router";
 
 import App from "./App.jsx";
 import ProductDetails from "./pages/ProductDetails.jsx";
-import Cart from "./pages/Cart.jsx";
+import Cart_Old from "./pages/Cart_Old.jsx";
 import "./index.css";
 import Checkout from "./pages/Checkout.jsx";
 import OrderSuccess from "./pages/OrderSuccess.jsx";
@@ -47,7 +47,7 @@ function Main() {
 
         <Route
           path="/cart"
-          element={<Cart cart={cart} setCart={setCart} />}
+          element={<Cart_Old cart={cart} setCart={setCart} />}
         />
 
         <Route

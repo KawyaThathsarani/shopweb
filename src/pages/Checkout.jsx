@@ -1,5 +1,10 @@
 import {useState} from "react";
 import {Link, useNavigate} from "react-router";
+import {Input} from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { Textarea } from "@/components/ui/textarea";
+import { Button } from "@/components/ui/button";
+import {Card,CardContent,CardHeader,CardTitle,}from "@/components/ui/card";
 
 function Checkout({cart,setCart}){
     const navigate = useNavigate();
@@ -31,46 +36,81 @@ function Checkout({cart,setCart}){
     }
 
     return(
-        <div className="max-w-xl mx-auto p-6">
-            <h1 className="text-3xl font-bold mb-6">Checkout</h1>
+        <div className="min-h-screen bg-slate-50 px-4 py-10">
+            <div className="mx-auto max-w-5xl">
+                <Link to="/cart" className="text-orange-800 hover:underline"> <Button> Back to Cart</Button></Link>
+                <h1 className="mt-5 text-3xl">Checkout</h1>
+                <p className="mt-2 text-slate-400">Enter your details.</p>
 
-            <form onSubmit={handleOrder} className="flex flex-col gap-4">
-                <label>full Name</label>
-                <input type="text" 
-                        value={name}
-                        onChange={e => setName(e.target.value)}
-                        required
-                        className="border p-3 rounded"/>
-                
-                <label>Email</label>
-                <input type="email" 
-                        value={email}
-                        onChange={e => setEmail(e.target.value)}
-                        required
-                        className="border p-3 rounded"/>
-                
-                <label>Phone:</label>
-                <input type="tel" 
-                        value={phone}
-                        onChange={e => setPhone(e.target.value)}
-                        required
-                        className="border p-3 rounded"/>
-                
-                <label>Delivery Address</label>
-                <textarea 
-                        value={address}
-                        onChange={e => setAddress(e.target.value)}
-                        required
-                        className="border p-3 rounded"/>
-                
-                <h2 className="text-xl font-bold mt-4">Total: ${total}</h2>
+                <div className="mt-8 grid gap-6 md:grid-cols-3">
+                    <Card className="md:col-span-2">
+                        <CardHeader>
+                            <CardTitle>Billing Information</CardTitle>
+                        </CardHeader>
 
-                <button
-                    type="submit"
-                    className="bg-orange-600 text-white p-3 rounded"
-                >Place Demo Order</button>
+                        <CardContent>
+                            <form onSubmit={handleOrder} className="space-y-5">
+                                <div className="space-y-2">
+                                    <Label htmlFor="name">Full Name</Label>
 
-            </form>
+                                    <Input id="name" type="text" placeholder="Enter your name" value={name} onChange={e=> setName(e.target.value)} required />
+                                </div>
+
+                                <div className="space-y-2">
+                                    <Label htmlFor="email">Email Address</Label>
+
+                                    <Input id="email" type="email" placeholder="example@email.com" value={email} onChange={e=> setEmail(e.target.value)} required />
+                                </div> 
+
+                                <div className="space-y-2">
+                                    <Label htmlFor="phone">Phone Number</Label>
+
+                                    <Input id="phone" type="tel" placeholder="Enter your phone number" value={phone} onChange={e=> setPhone(e.target.value)} required />
+                                </div>
+
+                                <div className="space-y-2">
+                                    <Label htmlFor="address">Delivery Address </Label>
+
+                                    <Textarea id="address" placeholder="Enter your Delivery Address" value={address} onChange={e=> setAddress(e.target.value)} required />
+                                </div>
+
+                                <Button type="submit" size="lg" className="w-full bg-orange-600 text-white hover:bg-orange-700">
+                                    Place Order
+                                </Button>
+
+                                <p className="text-center text-xs text-slate-500">Demo payments only.....</p>
+                            </form>
+                        </CardContent>
+                    </Card>
+
+                    <Card className="h-fit">
+                        <CardHeader>
+                            <CardTitle>Order Summary</CardTitle>
+                        </CardHeader>
+
+                        <CardContent>
+                            <div className="space-y-4">
+                                {cart.map(item=>(
+                                    <div key={item.id} className="flex justify-between gap-3">
+                                        <div>
+                                            <p className="text-sm font-medium">{item.title}</p>
+                                        </div>
+                                            <p className="text-xs text-slate-500">Quantity:{item.quantity}</p>
+                                    </div>
+                                ))}
+                            </div>
+
+                            <div className="my-5 border-t border-slate-200"/>
+                            <div className="flex justify-between items-center">
+                                <span className="font-semibold">Sub Total</span>
+                                <span className="text-xl font-bold text-orange-600">${total}</span>
+                            </div>
+
+                            <p className="mt-3 text-xs text-slate-600"> Free Delivery </p>
+                        </CardContent>
+                    </Card>
+                </div>
+            </div>
         </div>
     );
 }
