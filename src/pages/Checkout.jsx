@@ -38,7 +38,7 @@ function Checkout({cart,setCart}){
     return(
         <div className="min-h-screen bg-slate-50 px-4 py-10">
             <div className="mx-auto max-w-5xl">
-                <Link to="/cart" className="text-orange-800 hover:underline"> Back to Cart</Link>
+                <Link to="/cart" className="text-orange-800 hover:underline"> <Button> Back to Cart</Button></Link>
                 <h1 className="mt-5 text-3xl">Checkout</h1>
                 <p className="mt-2 text-slate-400">Enter your details.</p>
 

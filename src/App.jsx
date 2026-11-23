@@ -7,6 +7,14 @@ import "./App.css";
 import "./index.css";
 import { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import {Card,CardContent,CardHeader,CardTitle,} from "@/components/ui/card";
+import {Select,SelectContent,SelectItem,SelectTrigger,SelectValue,} from "@/components/ui/select";
+"use client"
+import { cn } from "@/lib/utils"
+import { DotPattern } from "@/components/ui/dot-pattern"
+import { TextAnimate } from "@/components/ui/text-animate"
 
 function App() {
 
@@ -17,7 +25,7 @@ function App() {
   const [search, setSearch] = useState("");
   const [category, setCategory] = useState("All");
   const [minPrice, setMinPrice] = useState("");
-  const [maxPrice, setMaxPrice] = useState(50000);
+  const [maxPrice, setMaxPrice] = useState(5000);
   const [sort, setSort] = useState("default");
   const [currentPage,setCurrentPage] = useState(1);
 
@@ -51,7 +59,7 @@ function App() {
     sortedProducts.sort((a, b) => b.price - a.price);
   }
 
-  const productsPerPage = 12;
+  const productsPerPage = 6;
   const totalPages = Math.ceil(           //Math.ceil -> use to roundup the number after deviding it  
     sortedProducts.length/productsPerPage
   );
@@ -81,51 +89,62 @@ function App() {
 
       <Header />
       <Hero/>
-      <main id="products" className="container">
+      <main id="products" className="container scroll-mt-54">
 
-        <h1>ShopNest Products</h1>
 
         <div className="shop-layout">
 
           <aside className="filters">
+            <Card>
+              <CardHeader>
+              <CardTitle >Filters</CardTitle>
+              </CardHeader>
 
-            <h2>Filters</h2>
+              <CardContent className="space-y-5">
+              <div className="space-y-2">
+              <Label htmlFor="search">Search Products</Label>
 
-            <label>Search Products</label>
-            <input
-              type="text"
-              placeholder="Search..."
-              value={search}
-              onChange={e => setSearch(e.target.value)}
-            />
+              <Input id="search" type="text" placeholder="Search products ..."  value={search} onChange={e=>setSearch(e.target.value)}/>
+            </div>
 
-            <label>Category</label>
-            <select
-              value={category}
-              onChange={e => setCategory(e.target.value)}
-            >
+            <div className="space-y-2">
+            <Label>Category</Label>
+            <Select value={category} onValueChange={setCategory}>
+              <SelectTrigger className="w-full">
+                <SelectValue placeholder="Select Category"/>
+              </SelectTrigger>
+
+              <SelectContent>
               {categories.map(cat => (
-                <option key={cat} value={cat}>
+                  <SelectItem key={cat} value={cat}>
                   {cat === "All" ? "All Categories" : cat}
-                </option>
+                  </SelectItem>
               ))}
-            </select>
-
-            <label>Minimum Price ($)</label>
+              </SelectContent>
+            </Select>
+            </div>
+            
+            <div className="space-y-2">
+            <Label htmlFor="minPrice">Minimum Price ($)</Label>
             <input
+              id="minPrice"
               type="number"
               min="0"
               value={minPrice}
               onChange={e => setMinPrice(Number(e.target.value))}
             />
+            </div>
 
-            <label>Maximum Price ($)</label>
+            <div className="space-y-2">
+            <Label htmlFor="maxPrice">Maximum Price ($)</Label>
             <input
+              id="maxPrice"
               type="number"
               min="0"
               value={maxPrice}
               onChange={e => setMaxPrice(Number(e.target.value))}
             />
+            </div>
 
             <label>Sort By</label>
             <select
@@ -137,19 +156,21 @@ function App() {
               <option value="high">Price: High to Low</option>
             </select>
 
-            <button onClick={resetFilters}>
-              Reset Filters
-            </button>
+              <Button variant="outline" className="w-full" onClick={resetFilters}>Reset Filters</Button> 
+
+              </CardContent>
+            </Card>
+            
 
           </aside>
 
 
           <section className="products-area">
-
-            <p>{sortedProducts.length} products found</p>
-
-            <div className="product-list">
-
+              <h1 className="text-center mt-6 "><TextAnimate animation="blurInUp" by="word">
+                Our Products ..
+              </TextAnimate></h1>
+            <div className="product-list mt-6">
+              
               {currentProducts.map(item => (
                 <Product
                   key={item.id}
@@ -168,7 +189,7 @@ function App() {
             )}
 
 
-            {totalPages > 1 && (
+            {totalPages > 1 && (     //pagination with shadcn
             <div className="flex justify-center gap-3 mt-8">          
 
               <Button
@@ -194,16 +215,16 @@ function App() {
             </div>
           )}          
 
-                    </section>          
+          </section>          
 
-                  </div>
-                </main>         
+        </div>
+        </main>         
 
-                <footer id="footer" className="footer">
-                  <Footer />
-                </footer>         
+        <footer id="footer" className="footer">
+          <Footer/>
+        </footer>         
 
-              </div>
+        </div>
   );
 }
 
