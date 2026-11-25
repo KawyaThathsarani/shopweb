@@ -1,8 +1,8 @@
-# ShopNest — React E-Commerce Web Application
+# ShopWeb — React E-Commerce Web Application
 
 A modern, responsive e-commerce demonstration application built with **React**, **Vite**, **Tailwind CSS**, **shadcn/ui**, and **Magic UI**. ShopNest allows users to browse products, filter and sort the catalog, view product details, manage a shopping cart, and complete a simulated checkout experience.
 
-> **Demo project:** ShopNest is a frontend learning and portfolio project. It does **not** process real payments, place real orders, or send customer information to a backend.
+> **Demo project:** ShopWeb is a frontend learning and portfolio project. It does **not** process real payments, place real orders, or send customer information to a backend.
 
 ## Features
 
