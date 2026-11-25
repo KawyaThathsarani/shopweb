@@ -1,230 +1,186 @@
 
+import { useState } from "react";
+
 import Header from "./components/Header";
 import Footer from "./components/Footer";
 import Product from "./components/Product";
-import Hero from "./components/Hero"
+import Hero from "./components/Hero";
+import FilterSidebar from "./components/FilterSidebar";
+
+import { Button } from "@/components/ui/button";
+import { TextAnimate } from "@/components/ui/text-animate";
+
 import "./App.css";
 import "./index.css";
-import { useState, useEffect } from "react";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
-import {Card,CardContent,CardHeader,CardTitle,} from "@/components/ui/card";
-import {Select,SelectContent,SelectItem,SelectTrigger,SelectValue,} from "@/components/ui/select";
-"use client"
-import { cn } from "@/lib/utils"
-import { DotPattern } from "@/components/ui/dot-pattern"
-import { TextAnimate } from "@/components/ui/text-animate"
 
 function App() {
 
-  // Store API products
-  const [products, setProducts] = useState([]);
-
-  // Filter states
-  const [search, setSearch] = useState("");
-  const [category, setCategory] = useState("All");
-  const [minPrice, setMinPrice] = useState("");
-  const [maxPrice, setMaxPrice] = useState(5000);
-  const [sort, setSort] = useState("default");
-  const [currentPage,setCurrentPage] = useState(1);
-
-  useEffect(() => {
-    fetch("https://dummyjson.com/products")
-      .then(response => response.json())
-      .then(data => setProducts(data.products));
-  }, []);
-
-  const categories = [
-    "All",
-    ...new Set(products.map(item => item.category))
-  ];
-
-  const filteredProducts = products.filter(item => {
-    return (
-      item.title.toLowerCase().includes(search.toLowerCase()) &&
-      (category === "All" || item.category === category) &&
-      item.price >= minPrice &&
-      item.price <= maxPrice
-    );
+  // 1. Filter states
+  const [filters, setFilters] = useState({
+    search: "",
+    category: "All",
+    minPrice: "",
+    maxPrice: "",
+    sort: "default",
   });
 
-  const sortedProducts = [...filteredProducts];
-
-  if (sort === "low") {
-    sortedProducts.sort((a, b) => a.price - b.price);
-  }
-
-  if (sort === "high") {
-    sortedProducts.sort((a, b) => b.price - a.price);
-  }
+  // 2. Pagination state
+  const [currentPage, setCurrentPage] = useState(1);
 
   const productsPerPage = 6;
-  const totalPages = Math.ceil(           //Math.ceil -> use to roundup the number after deviding it  
-    sortedProducts.length/productsPerPage
+
+  // 3. Store API results from FilterSidebar
+  const [results, setResults] = useState({
+    products: [],
+    total: 0,
+    loading: true,
+    error: "",
+  });
+
+  const { products, total, loading, error } = results;
+
+  // 4. Calculate number of pages
+  const totalPages = Math.ceil(
+    total / productsPerPage
   );
-  useEffect(() => {
-  if (currentPage > Math.max(1, totalPages)) {
+
+  // 5. Update filters
+  function updateFilter(name, value) {
+    setFilters(previous => ({
+      ...previous,
+      [name]: value,
+    }));
+
+    // Return to first page when filter changes
     setCurrentPage(1);
   }
-  }, [currentPage, totalPages]);
 
-  const startIndex = (currentPage -1) * productsPerPage;
-
-  const currentProducts = sortedProducts.slice(   //retrieve a selected portion from an array
-    startIndex,
-    startIndex + productsPerPage
-  );
-
+  // 6. Reset all filters
   function resetFilters() {
-    setSearch("");
-    setCategory("All");
-    setMinPrice(0);
-    setMaxPrice(5000);
-    setSort("default");
+    setFilters({
+      search: "",
+      category: "All",
+      minPrice: "",
+      maxPrice: "",
+      sort: "default",
+    });
+
+    setCurrentPage(1);
   }
 
   return (
     <div id="home">
 
       <Header />
-      <Hero/>
-      <main id="products" className="container scroll-mt-54">
 
+      <Hero />
+
+      <main
+        id="products"
+        className="container mx-auto scroll-mt-24"
+      >
 
         <div className="shop-layout">
 
-          <aside className="filters">
-            <Card>
-              <CardHeader>
-              <CardTitle >Filters</CardTitle>
-              </CardHeader>
-
-              <CardContent className="space-y-5">
-              <div className="space-y-2">
-              <Label htmlFor="search">Search Products</Label>
-
-              <Input id="search" type="text" placeholder="Search products ..."  value={search} onChange={e=>setSearch(e.target.value)}/>
-            </div>
-
-            <div className="space-y-2">
-            <Label>Category</Label>
-            <Select value={category} onValueChange={setCategory}>
-              <SelectTrigger className="w-full">
-                <SelectValue placeholder="Select Category"/>
-              </SelectTrigger>
-
-              <SelectContent>
-              {categories.map(cat => (
-                  <SelectItem key={cat} value={cat}>
-                  {cat === "All" ? "All Categories" : cat}
-                  </SelectItem>
-              ))}
-              </SelectContent>
-            </Select>
-            </div>
-            
-            <div className="space-y-2">
-            <Label htmlFor="minPrice">Minimum Price ($)</Label>
-            <input
-              id="minPrice"
-              type="number"
-              min="0"
-              value={minPrice}
-              onChange={e => setMinPrice(Number(e.target.value))}
-            />
-            </div>
-
-            <div className="space-y-2">
-            <Label htmlFor="maxPrice">Maximum Price ($)</Label>
-            <input
-              id="maxPrice"
-              type="number"
-              min="0"
-              value={maxPrice}
-              onChange={e => setMaxPrice(Number(e.target.value))}
-            />
-            </div>
-
-            <label>Sort By</label>
-            <select
-              value={sort}
-              onChange={e => setSort(e.target.value)}
-            >
-              <option value="default">Default</option>
-              <option value="low">Price: Low to High</option>
-              <option value="high">Price: High to Low</option>
-            </select>
-
-              <Button variant="outline" className="w-full" onClick={resetFilters}>Reset Filters</Button> 
-
-              </CardContent>
-            </Card>
-            
-
-          </aside>
-
+          <FilterSidebar
+            filters={filters}
+            currentPage={currentPage}
+            onFilterChange={updateFilter}
+            onReset={resetFilters}
+            onResults={setResults}
+          />
 
           <section className="products-area">
-              <h1 className="text-center mt-6 "><TextAnimate animation="blurInUp" by="word">
+
+            <h1 className="mt-6 text-center">
+              <TextAnimate
+                animation="blurInUp"
+                by="word"
+              >
                 Our Products ..
-              </TextAnimate></h1>
-            <div className="product-list mt-6">
-              
-              {currentProducts.map(item => (
-                <Product
-                  key={item.id}
-                  name={item.title}
-                  id={item.id}
-                  price={item.price}
-                  image={item.thumbnail}
-                  category={item.category}
-                />
-              ))}
+              </TextAnimate>
+            </h1>
 
-            </div>
-
-            {sortedProducts.length === 0 && (
-              <p>No matching products found.</p>
+            {!loading && !error && (
+              <p className="mt-3 text-center text-sm text-slate-500">
+                {total} matching products
+              </p>
             )}
 
+            {loading ? (
 
-            {totalPages > 1 && (     //pagination with shadcn
-            <div className="flex justify-center gap-3 mt-8">          
+              <p className="mt-8 text-center text-slate-500">
+                Loading products...
+              </p>
 
-              <Button
-                variant="outline"
-                disabled={currentPage === 1}
-                onClick={() => setCurrentPage(currentPage - 1)}
-              >
-                Previous
-              </Button>         
+            )  : products.length === 0 ? (
 
-              <span className="p-2">
-                Page {currentPage} of {totalPages}
-              </span>         
+              <p className="mt-8 text-center text-slate-500">
+                No matching products found.
+              </p>
 
-              <Button
-                variant="outline"
-                disabled={currentPage === totalPages}
-                onClick={() => setCurrentPage(currentPage + 1)}
-              >
-                Next
-              </Button>         
+            ) : (
 
-            </div>
-          )}          
+              <div className="product-list mt-6">
 
-          </section>          
+                {products.map(item => (
+                  <Product
+                    key={item.id}
+                    id={item.id}
+                    name={item.title}
+                    price={item.price}
+                    image={item.thumbnail}
+                    category={item.category}
+                  />
+                ))}
+
+              </div>
+
+            )}
+
+            {totalPages > 1 && (
+
+              <div className="mt-8 flex items-center justify-center gap-3">
+
+                <Button
+                  variant="outline"
+                  disabled={currentPage === 1}
+                  onClick={() =>
+                    setCurrentPage(page => page - 1)
+                  }
+                >
+                  Previous
+                </Button>
+
+                <span className="p-2 text-sm font-medium">
+                  Page {currentPage} of {totalPages}
+                </span>
+
+                <Button
+                  variant="outline"
+                  disabled={currentPage >= totalPages}
+                  onClick={() =>
+                    setCurrentPage(page => page + 1)
+                  }
+                >
+                  Next
+                </Button>
+
+              </div>
+
+            )}
+
+          </section>
 
         </div>
-        </main>         
 
-        <footer id="footer" className="footer">
-          <Footer/>
-        </footer>         
+      </main>
 
-        </div>
+      <footer id="footer" className="footer">
+        <Footer />
+      </footer>
+
+    </div>
   );
 }
 
