@@ -1,21 +1,17 @@
 
 import { useState } from "react";
-
 import Header from "./components/Header";
 import Footer from "./components/Footer";
-import Product from "./components/Product";
+import Pagination from "./components/Pagination";
+import ProductGrid from "./components/ProductGrid";
 import Hero from "./components/Hero";
 import FilterSidebar from "./components/FilterSidebar";
-
-import { Button } from "@/components/ui/button";
-import { TextAnimate } from "@/components/ui/text-animate";
-
 import "./App.css";
 import "./index.css";
 
 function App() {
 
-  // 1. Filter states
+  //Filter states
   const [filters, setFilters] = useState({
     search: "",
     category: "All",
@@ -24,12 +20,11 @@ function App() {
     sort: "default",
   });
 
-  // 2. Pagination state
+  //Pagination state
   const [currentPage, setCurrentPage] = useState(1);
-
   const productsPerPage = 6;
 
-  // 3. Store API results from FilterSidebar
+  //Store API results from FilterSidebar
   const [results, setResults] = useState({
     products: [],
     total: 0,
@@ -39,23 +34,21 @@ function App() {
 
   const { products, total, loading, error } = results;
 
-  // 4. Calculate number of pages
+  //Calculate number of pages
   const totalPages = Math.ceil(
     total / productsPerPage
   );
 
-  // 5. Update filters
+  //Update filters
   function updateFilter(name, value) {
     setFilters(previous => ({
       ...previous,
       [name]: value,
     }));
-
-    // Return to first page when filter changes
-    setCurrentPage(1);
+    setCurrentPage(1);     // Return to first page when filter changes
   }
 
-  // 6. Reset all filters
+  //Reset all filters
   function resetFilters() {
     setFilters({
       search: "",
@@ -64,7 +57,6 @@ function App() {
       maxPrice: "",
       sort: "default",
     });
-
     setCurrentPage(1);
   }
 
@@ -72,13 +64,8 @@ function App() {
     <div id="home">
 
       <Header />
-
       <Hero />
-
-      <main
-        id="products"
-        className="container mx-auto scroll-mt-24"
-      >
+      <main id="products" className="container mx-auto scroll-mt-24">
 
         <div className="shop-layout">
 
@@ -92,83 +79,18 @@ function App() {
 
           <section className="products-area">
 
-            <h1 className="mt-6 text-center">
-              <TextAnimate
-                animation="blurInUp"
-                by="word"
-              >
-                Our Products ..
-              </TextAnimate>
-            </h1>
+              <ProductGrid
+                products={products}
+                total={total}
+                loading={loading}
+                error={error}
+              />
 
-            {!loading && !error && (
-              <p className="mt-3 text-center text-sm text-slate-500">
-                {total} matching products
-              </p>
-            )}
-
-            {loading ? (
-
-              <p className="mt-8 text-center text-slate-500">
-                Loading products...
-              </p>
-
-            )  : products.length === 0 ? (
-
-              <p className="mt-8 text-center text-slate-500">
-                No matching products found.
-              </p>
-
-            ) : (
-
-              <div className="product-list mt-6">
-
-                {products.map(item => (
-                  <Product
-                    key={item.id}
-                    id={item.id}
-                    name={item.title}
-                    price={item.price}
-                    image={item.thumbnail}
-                    category={item.category}
-                  />
-                ))}
-
-              </div>
-
-            )}
-
-            {totalPages > 1 && (
-
-              <div className="mt-8 flex items-center justify-center gap-3">
-
-                <Button
-                  variant="outline"
-                  disabled={currentPage === 1}
-                  onClick={() =>
-                    setCurrentPage(page => page - 1)
-                  }
-                >
-                  Previous
-                </Button>
-
-                <span className="p-2 text-sm font-medium">
-                  Page {currentPage} of {totalPages}
-                </span>
-
-                <Button
-                  variant="outline"
-                  disabled={currentPage >= totalPages}
-                  onClick={() =>
-                    setCurrentPage(page => page + 1)
-                  }
-                >
-                  Next
-                </Button>
-
-              </div>
-
-            )}
+              <Pagination
+                currentPage={currentPage}
+                totalPages={totalPages}
+                setCurrentPage={setCurrentPage}
+              />
 
           </section>
 
@@ -176,9 +98,7 @@ function App() {
 
       </main>
 
-      <footer id="footer" className="footer">
         <Footer />
-      </footer>
 
     </div>
   );
