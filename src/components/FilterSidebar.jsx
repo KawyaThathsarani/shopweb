@@ -150,8 +150,8 @@ function FilterSidebar({ filters, currentPage, onFilterChange, onReset, onResult
     ]);
 
     return (
-    <aside className="filters">
-        <Card>
+    <aside className="w-full min-w-0">
+        <Card className="bg-white">
         <CardHeader>
             <CardTitle>Filters</CardTitle>
         </CardHeader>
