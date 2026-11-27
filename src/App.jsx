@@ -6,8 +6,8 @@ import Pagination from "./components/Pagination";
 import ProductGrid from "./components/ProductGrid";
 import Hero from "./components/Hero";
 import FilterSidebar from "./components/FilterSidebar";
-import "./App.css";
-import "./index.css";
+//import "./App.css";
+//import "./index.css";
 
 function App() {
 
@@ -60,48 +60,54 @@ function App() {
     setCurrentPage(1);
   }
 
-  return (
-    <div id="home">
+  
+return (
+  <div id="home">
+    <Header />
 
-      <Header />
-      <Hero />
-      <main id="products" className="container mx-auto scroll-mt-24">
+    <Hero />
 
-        <div className="shop-layout">
+    <main
+      id="products"
+      className="mx-auto w-full max-w-1400px px-5 py-8 scroll-mt-24"> 
+      <div className="grid grid-cols-1 items-start gap-7 lg:grid-cols-[250px_minmax(0,1fr)]">  {/* 250px: first col (side filter) remaining col (second col): based on the space of the window (0 -1fr) */}
 
-          <FilterSidebar
-            filters={filters}
-            currentPage={currentPage}
-            onFilterChange={updateFilter}
-            onReset={resetFilters}
-            onResults={setResults}
+        <FilterSidebar
+          filters={filters}
+          currentPage={currentPage}
+          onFilterChange={updateFilter}
+          onReset={resetFilters}
+          onResults={setResults}
+        />
+
+        <div className="min-w-0">
+
+          <ProductGrid
+            products={products}
+            total={total}
+            loading={loading}
+            error={error}
           />
 
-          <section className="products-area">
-
-              <ProductGrid
-                products={products}
-                total={total}
-                loading={loading}
-                error={error}
-              />
-
-              <Pagination
-                currentPage={currentPage}
-                totalPages={totalPages}
-                setCurrentPage={setCurrentPage}
-              />
-
-          </section>
+          {!loading && !error && (
+            <Pagination
+              currentPage={currentPage}
+              totalPages={totalPages}
+              setCurrentPage={setCurrentPage}
+            />
+          )}
 
         </div>
 
-      </main>
+      </div>
+    </main>
 
-        <Footer />
+    <footer id="footer">
+      <Footer />
+    </footer>
+  </div>
+);
 
-    </div>
-  );
 }
 
 export default App;
